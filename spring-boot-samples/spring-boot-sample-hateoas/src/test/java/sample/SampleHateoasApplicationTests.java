@@ -16,8 +16,12 @@
 
 package sample;
 
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -28,15 +32,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertThat;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = SampleHateoasApplication.class)
 @WebAppConfiguration
-@IntegrationTest("server.port:0")
+@IntegrationTest({"server.port:0"})
 @DirtiesContext
 public class SampleHateoasApplicationTests {
 
@@ -47,6 +46,7 @@ public class SampleHateoasApplicationTests {
 	public void hasHalLinks() throws Exception {
 		ResponseEntity<String> entity = new TestRestTemplate().getForEntity(
 				"http://localhost:" + this.port + "/customers/1", String.class);
+		System.out.println(entity.getBody());
 		assertThat(entity.getStatusCode(), equalTo(HttpStatus.OK));
 		assertThat(entity.getBody(), startsWith("{\"id\":1,\"firstName\":\"Oliver\""
 				+ ",\"lastName\":\"Gierke\""));
